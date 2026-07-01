@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PrimeTrade AI - Binance Futures Dashboard</title>
+    <!-- Google Fonts Outfit & JetBrains Mono for Code -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Outfit:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header class="main-header">
+        <div class="header-logo">
+            <span class="pulse-dot"></span>
+            <h1>⚡ PrimeTrade AI</h1>
+        </div>
+        <div class="header-subtitle">Binance Futures USDT-M Testnet</div>
+    </header>
+
+    <main class="dashboard-container">
+        <!-- LEFT COLUMN: ORDER PANEL -->
+        <section class="panel card order-panel">
+            <h2>Place Order</h2>
+            <form id="orderForm">
+                <!-- Symbol -->
+                <div class="form-group">
+                    <label for="symbol">Symbol</label>
+                    <input type="text" id="symbol" name="symbol" value="BTCUSDT" placeholder="e.g., BTCUSDT" required autocomplete="off">
+                </div>
+
+                <!-- Side Toggle (BUY/SELL) -->
+                <div class="form-group">
+                    <label>Order Side</label>
+                    <div class="side-selector">
+                        <input type="radio" id="sideBuy" name="side" value="BUY" checked>
+                        <label for="sideBuy" class="btn-side buy-label">BUY</label>
+
+                        <input type="radio" id="sideSell" name="side" value="SELL">
+                        <label for="sideSell" class="btn-side sell-label">SELL</label>
+                    </div>
+                </div>
+
+                <!-- Order Type -->
+                <div class="form-group">
+                    <label for="type">Order Type</label>
+                    <select id="type" name="type">
+                        <option value="MARKET" selected>MARKET</option>
+                        <option value="LIMIT">LIMIT</option>
+                        <option value="STOP_LIMIT">STOP_LIMIT</option>
+                    </select>
+                </div>
+
+                <!-- Quantity -->
+                <div class="form-group">
+                    <label for="quantity">Quantity</label>
+                    <input type="number" id="quantity" name="quantity" value="0.01" step="0.000001" min="0" placeholder="0.00" required>
+                </div>
+
+                <!-- Limit Price (Conditional) -->
+                <div id="priceGroup" class="form-group hidden">
+                    <label for="price">Limit Price (USDT)</label>
+                    <input type="number" id="price" name="price" step="0.0001" min="0" placeholder="0.00">
+                </div>
+
+                <!-- Stop Price (Conditional) -->
+                <div id="stopPriceGroup" class="form-group hidden">
+                    <label for="stopPrice">Stop Trigger Price (USDT)</label>
+                    <input type="number" id="stopPrice" name="stopPrice" step="0.0001" min="0" placeholder="0.00">
+                </div>
+
+                <!-- Dry Run Mode -->
+                <div class="form-group toggle-group">
+                    <div class="toggle-control">
+                        <input type="checkbox" id="dryRun" name="dryRun" checked>
+                        <label for="dryRun" class="toggle-slider"></label>
+                    </div>
+                    <label for="dryRun" class="toggle-label">
+                        <strong>Simulation Mode</strong>
+                        <span class="toggle-help">Execute as mock dry-run (No keys required)</span>
+                    </label>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" id="btnSubmit" class="btn-submit">Transmit Order ⚡</button>
+            </form>
+        </section>
+
+        <!-- RIGHT COLUMN: RESULTS & LOGS -->
+        <div class="monitoring-column">
+            <!-- Order Results Card -->
+            <section class="panel card status-panel">
+                <h2>Execution Report</h2>
+                <div id="statusPlaceholder" class="status-placeholder">
+                    Waiting for order submission...
+                </div>
+                
+                <div id="reportContainer" class="report-container hidden">
+                    <div id="reportHeader" class="report-banner">
+                        <span id="reportTitle">Order Status</span>
+                    </div>
+                    <div class="report-details">
+                        <div class="detail-row">
+                            <span class="label">Order ID</span>
+                            <span id="resOrderId" class="value">-</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="label">Status</span>
+                            <span id="resStatus" class="value">-</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="label">Executed Qty</span>
+                            <span id="resQty" class="value">-</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="label">Average Price</span>
+                            <span id="resPrice" class="value">-</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="label">Execution Time</span>
+                            <span id="resTime" class="value">-</span>
+                        </div>
+                        <!-- Optional Error Metadata -->
+                        <div id="errorDetailsRow" class="detail-row error-row hidden">
+                            <span class="label">Error Details</span>
+                            <span id="resError" class="value">-</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Console Log Output -->
+            <section class="panel card console-panel">
+                <div class="console-header">
+                    <h2>Live Terminal Logs</h2>
+                    <div class="console-actions">
+                        <span class="console-indicator active">
+                            <span class="ping-circle"></span> Live Feed
+                        </span>
+                        <button id="btnClearConsole" class="btn-text">Clear</button>
+                    </div>
+                </div>
+                <div id="terminalBody" class="terminal-body">
+                    <!-- Loaded dynamically -->
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer class="main-footer">
+        <p>PrimeTrade AI • Professional Trading Interface. Strictly for testing purposes.</p>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>
